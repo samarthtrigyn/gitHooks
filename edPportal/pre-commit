@@ -1,0 +1,31 @@
+#!/bin/bash
+
+git fetch origin testing_base
+rebase_required=false
+
+# Retrieve the name of the current branch
+current_branch=$(git name-rev --name-only HEAD)
+dev_base_branch_name="dev-master"
+prod_base_branch_name="prod-master"
+
+# The below branch is the one onto which your feature branch will we rebased. 
+# When writing code for DEV env use the branch name as dev-master and for prod use prod-master below
+custom_base_branch_name="prod-master"
+
+currentBranchHash=$(git rev-parse heads/${current_branch})
+remoteMasterHash=$(git rev-parse origin/${custom_base_branch_name})
+
+commonMergeBaseHash=$(git merge-base ${remoteMasterHash} ${currentBranchHash})
+
+echo "${currentBranchHash} ::: ${remoteMasterHash}  :::: ${commonMergeBaseHash}"
+[ "${remoteMasterHash}" = "${commonMergeBaseHash}" ] && rebase_required=false || rebase_required=true
+
+# Rebase the current branch with the master branch
+[ "${rebase_required}" = "true" ] && echo "Error: Rebase is Required before pushing!! Going to rebase ${current_branch} onto ${custom_base_branch_name} " || echo "Info: Your current branch is up to date with the latest commits in ${custom_base_branch_name}"
+git rebase origin/${custom_base_branch_name}
+
+# Check if the rebase was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Unable to rebase with ${custom_base_branch_name} branch. Please resolve conflicts and try again."
+    exit 1
+fi
