@@ -12,7 +12,7 @@ prod_base_branch_name="prod-master"
 # When writing code for DEV env use the branch name as dev-master and for prod use prod-master below
 custom_base_branch_name="dev-master"
 
-git fetch origin testing_base
+git fetch origin ${custom_base_branch_name}
 
 currentBranchHash=$(git rev-parse heads/${current_branch})
 remoteMasterHash=$(git rev-parse origin/${custom_base_branch_name})
