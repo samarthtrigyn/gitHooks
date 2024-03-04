@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git fetch origin testing_base
+
 rebase_required=false
 
 # Retrieve the name of the current branch
@@ -10,7 +10,9 @@ prod_base_branch_name="prod-master"
 
 # The below branch is the one onto which your feature branch will we rebased. 
 # When writing code for DEV env use the branch name as dev-master and for prod use prod-master below
-custom_base_branch_name="prod-master"
+custom_base_branch_name="dev-master"
+
+git fetch origin testing_base
 
 currentBranchHash=$(git rev-parse heads/${current_branch})
 remoteMasterHash=$(git rev-parse origin/${custom_base_branch_name})
