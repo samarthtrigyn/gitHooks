@@ -7,21 +7,17 @@ rebase_required=false
 current_branch=$(git name-rev --name-only HEAD)
 dev_base_branch_name="dev-master"
 prod_base_branch_name="prod-master"
-custom_base_branch_name="testing_base"
+
+# The below branch is the one onto which your feature branch will we rebased. 
+# When writing code for DEV env use the branch name as dev-master and for prod use prod-master below
+custom_base_branch_name="prod-master"
 
 currentBranchHash=$(git rev-parse heads/${current_branch})
 remoteMasterHash=$(git rev-parse origin/${custom_base_branch_name})
 
 commonMergeBaseHash=$(git merge-base ${remoteMasterHash} ${currentBranchHash})
 
-
-#echo "${temp}  :::: ${temp2}"
 echo "${currentBranchHash} ::: ${remoteMasterHash}  :::: ${commonMergeBaseHash}"
-#echo "^^^^^^^^^^^^^^^^^^^^^^^^"
-#git log -1 ${remoteMasterHash}
-#echo "*******************************************"
-#git log -1 ${commonMergeBaseHash}
-
 [ "${remoteMasterHash}" = "${commonMergeBaseHash}" ] && rebase_required=false || rebase_required=true
 
 # Rebase the current branch with the master branch
